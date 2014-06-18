@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title></title>
+</head>
+<body>
+<div>
+  <form>
+    <div>
+      <label>username</label>
+      <input id="username" type="text">
+    </div>
+    <div>
+      <label>password</label>
+      <input id="password" type="password">
+    </div>
+    <div>
+      <input type="submit">
+    </div>
+  </form>
+</div>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../jqdap.js"></script>
+<script>
+$(function() {
+  $('form').submit(function() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var options = {
+      username: username,
+      password: password,
+      withCredentials: true
+    };
+    jqdap.loadData('http://dias-tb2.tkl.iis.u-tokyo.ac.jp:10080/dods/s.dods?lat', options)
+      .then(function(data) {
+        console.log(data);
+      });
+    jqdap.loadDataset('http://dias-tb2.tkl.iis.u-tokyo.ac.jp:10080/dods/s', options)
+      .then(function(dataset) {
+        console.log(dataset);
+      });
+    return false;
+  });
+});
+</script>
+</body>
+</html>
