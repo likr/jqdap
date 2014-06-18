@@ -5,7 +5,7 @@
   "authors": [
     "Yosuke ONOUE <onoue@likr-lab.com>"
   ],
-  "description": "OPeNDAP client inspired by promise",
+  "description": "jQuery.ajax based OPeNDAP client",
   "license": "MIT",
   "homepage": "https://github.com/likr/jqdap",
   "ignore": [

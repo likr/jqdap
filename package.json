@@ -1,7 +1,7 @@
 {
   "name": "jqdap",
   "version": "0.0.0",
-  "description": "",
+  "description": "jQuery.ajax based OPeNDAP client",
   "main": "jqdap.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
