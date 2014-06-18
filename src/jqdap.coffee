@@ -3,7 +3,7 @@ xdr = require '../lib/xdr'
 
 getBuffer = (data) ->
     b = new Array(data.length)
-    for i in [0..data.length]
+    for i in [0...data.length]
         b[i] = data.charCodeAt(i) & 0xff
     b
 
@@ -23,6 +23,11 @@ parseArg = (arg) ->
 
 loadData = (url, arg={}) ->
   options = parseArg arg
+  options.dataType = 'binary'
+  options.beforeSend = (xhr) ->
+    xhr.overrideMimeType 'text/plain; charset=x-user-defined'
+  options.converters =
+    '* binary': (response) -> response
   $.ajax url, options
     .then (dods) ->
       pos = dods.indexOf '\nData:\n'

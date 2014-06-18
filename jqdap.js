@@ -10,7 +10,7 @@
   getBuffer = function(data) {
     var b, i, _i, _ref;
     b = new Array(data.length);
-    for (i = _i = 0, _ref = data.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+    for (i = _i = 0, _ref = data.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
       b[i] = data.charCodeAt(i) & 0xff;
     }
     return b;
@@ -40,6 +40,15 @@
       arg = {};
     }
     options = parseArg(arg);
+    options.dataType = 'binary';
+    options.beforeSend = function(xhr) {
+      return xhr.overrideMimeType('text/plain; charset=x-user-defined');
+    };
+    options.converters = {
+      '* binary': function(response) {
+        return response;
+      }
+    };
     return $.ajax(url, options).then(function(dods) {
       var dapvar, dds, pos;
       pos = dods.indexOf('\nData:\n');
