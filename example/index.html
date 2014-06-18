@@ -2,21 +2,56 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title></title>
+<title>jqdap Example</title>
+<style>
+form>div>label {
+  float: left;
+  text-align: right;
+  margin-right: 10px;
+  width: 200px;
+}
+form>div>input, form>div>textarea {
+  width: 400px;
+}
+form>input {
+  margin-left: 210px;
+}
+</style>
 </head>
 <body>
+<h1>jqdap Example</h1>
+<h2>Request</h2>
 <div>
-  <form>
+  <form id="request">
     <div>
-      <label>username</label>
+      <label>OPeNDAP Endpoint</label>
+      <input id="endpoint" type="text">
+    </div>
+    <div>
+      <label>OPeNDAP Query</label>
+      <input id="query" type="text">
+    </div>
+    <div>
+      <label>Username</label>
       <input id="username" type="text">
     </div>
     <div>
-      <label>password</label>
+      <label>Password</label>
       <input id="password" type="password">
     </div>
+    <input type="submit">
+  </form>
+</div>
+<h2>Response</h2>
+<div>
+  <form id="response">
     <div>
-      <input type="submit">
+      <label>Dataset</label>
+      <textarea id="dataset" rows="5"></textarea>
+    </div>
+    <div>
+      <label>Data</label>
+      <textarea id="data" rows="5"></textarea>
     </div>
   </form>
 </div>
@@ -24,21 +59,24 @@
 <script src="../jqdap.js"></script>
 <script>
 $(function() {
-  $('form').submit(function() {
+  $('form#request').submit(function() {
+    var endpoint = document.getElementById('endpoint').value;
+    var query = document.getElementById('query').value;
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
-    var options = {
-      username: username,
-      password: password,
-      withCredentials: true
+    var options = {};
+    if (username || password) {
+      options.username = username;
+      options.password = password;
+      options.withCredentials = true;
     };
-    jqdap.loadData('http://dias-tb2.tkl.iis.u-tokyo.ac.jp:10080/dods/s.dods?lat', options)
+    jqdap.loadData(endpoint + '.dods?' + query, options)
       .then(function(data) {
-        console.log(data);
+        document.getElementById('data').value = JSON.stringify(data);
       });
-    jqdap.loadDataset('http://dias-tb2.tkl.iis.u-tokyo.ac.jp:10080/dods/s', options)
+    jqdap.loadDataset(endpoint, options)
       .then(function(dataset) {
-        console.log(dataset);
+        document.getElementById('dataset').value = JSON.stringify(dataset);
       });
     return false;
   });
