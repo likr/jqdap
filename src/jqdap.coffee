@@ -2,19 +2,15 @@ parser = require '../lib/parser'
 xdr = require '../lib/xdr'
 
 getBuffer = (data) ->
-    b = new Array(data.length)
-    for i in [0...data.length]
-        b[i] = data.charCodeAt(i) & 0xff
-    b
+  b = new Array(data.length)
+  for i in [0...data.length]
+    b[i] = data.charCodeAt(i) & 0xff
+  b
 
 
 parseArg = (arg) ->
   {username, password, withCredentials} = arg
   options = {}
-  if username?
-    options.username = username
-  if password?
-    options.password = password
   if withCredentials?
     options.xhrFields =
       withCredentials: withCredentials
@@ -25,6 +21,9 @@ loadData = (url, arg={}) ->
   options = parseArg arg
   options.dataType = 'binary'
   options.beforeSend = (xhr) ->
+    if arg.username? and arg.password?
+      credentials = btoa "#{arg.username}:#{arg.password}"
+      xhr.setRequestHeader "Authorization", "Basic #{credentials}"
     xhr.overrideMimeType 'text/plain; charset=x-user-defined'
   options.converters =
     '* binary': (response) -> response
@@ -41,6 +40,10 @@ loadData = (url, arg={}) ->
 
 loadDataset = (url, arg={}) ->
   options = parseArg arg
+  options.beforeSend = (xhr) ->
+    if arg.username? and arg.password?
+      credentials = btoa "#{arg.username}:#{arg.password}"
+      xhr.setRequestHeader 'Authorization', "Basic #{credentials}"
   ddsRequest = $.ajax url + '.dds', options
   dasRequest = $.ajax url + '.das', options
   $.when ddsRequest.promise(), dasRequest.promise()
